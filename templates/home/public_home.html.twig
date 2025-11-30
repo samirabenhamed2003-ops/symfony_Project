@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Se7a 3ltayer{% endblock %}
+
+{% block body %}
+<div class="row">
+    <!-- Sidebar categories -->
+    <aside class="col-lg-3 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6 class="fw-bold">CATÉGORIES</h6>
+                <ul class="list-unstyled mt-3">
+                    <li class="mb-2"><a href="#" class="text-dark">Médecine générale</a></li>
+                    <li class="mb-2"><a href="#" class="text-dark">Pédiatrie</a></li>
+                    <li class="mb-2"><a href="#" class="text-dark">Cardiologie</a></li>
+                    <li class="mb-2"><a href="#" class="text-dark">Radiologie</a></li>
+                    <li class="mb-2"><a href="#" class="text-dark">Analyses médicales</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mt-4">
+            <img src="{{ asset('images/promo_banner.jpg') }}" class="card-img-top" alt="promo">
+            <div class="card-body">
+                <h6>Promo</h6>
+                <p class="small mb-0">Bilan complet à -20% ce mois-ci.</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <section class="col-lg-9">
+        <!-- Slider -->
+        <div id="mainSlider" class="carousel slide mb-4" data-bs-ride="carousel">
+            <div class="carousel-inner rounded shadow-sm">
+                <div class="carousel-item active">
+                    <img src="{{ asset('images/slider/medical1.jpg') }}" class="d-block w-100" alt="slide1">
+                    <div class="carousel-caption d-none d-md-block text-start">
+                        <h2 class="fw-bold">Bienvenue à Se7a 3ltayer</h2>
+                        <p>Soins de qualité, médecins expérimentés.</p>
+                        <a class="btn btn-success" href="{{ path('app_login') }}">Prendre rendez-vous</a>
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <img src="{{ asset('images/slider/medical2.jpg') }}" class="d-block w-100" alt="slide2">
+                    <div class="carousel-caption d-none d-md-block text-start">
+                        <h2 class="fw-bold">Analyses & Diagnostics</h2>
+                        <p>Équipements modernes et résultats rapides.</p>
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <img src="{{ asset('images/slider/medical3.jpg') }}" class="d-block w-100" alt="slide3">
+                    <div class="carousel-caption d-none d-md-block text-start">
+                        <h2 class="fw-bold">Urgences 24/7</h2>
+                        <p>Une équipe prête à intervenir.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#mainSlider" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#mainSlider" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+
+        <!-- Categories cards -->
+        <h5 class="mb-3">Nos services populaires</h5>
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ asset('images/services/consultation.jpg') }}" class="card-img-top" alt="consult">
+                    <div class="card-body">
+                        <h6 class="card-title">Consultation générale</h6>
+                        <p class="small">Prise en charge complète par nos médecins.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ asset('images/services/analyse.jpg') }}" class="card-img-top" alt="analyse">
+                    <div class="card-body">
+                        <h6 class="card-title">Analyses médicales</h6>
+                        <p class="small">Rapide et fiable.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ asset('images/services/radiologie.jpg') }}" class="card-img-top" alt="radio">
+                    <div class="card-body">
+                        <h6 class="card-title">Radiologie</h6>
+                        <p class="small">Imagerie moderne pour diagnostics précis.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info section -->
+        <div class="p-4 bg-light border rounded shadow-sm mb-5">
+            <h5>Pourquoi nous choisir ?</h5>
+            <p class="mb-0">Equipe pluridisciplinaire, équipements modernes, et un suivi patient personnalisé.</p>
+        </div>
+
+    </section>
+</div>
+{% endblock %}

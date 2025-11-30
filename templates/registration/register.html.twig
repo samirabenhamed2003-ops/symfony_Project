@@ -1,0 +1,211 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block stylesheets %}
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #e3f2fd;
+}
+
+.container-auth {
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.auth-card {
+    display: flex;
+    width: 600px; /* cadre réduit */
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    background: #ffffff;
+    transition: transform 0.3s ease;
+}
+
+.auth-card:hover {
+    transform: translateY(-3px);
+}
+
+.auth-left {
+    flex: 1;
+    background: linear-gradient(135deg, #42a5f5, #478ed1);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 30px;
+    text-align: center;
+}
+
+.auth-left h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.auth-left p {
+    margin-top: 15px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.auth-right {
+    flex: 1;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-right h3 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+}
+
+/* Ligne des boutons sociaux avec icônes seulement */
+.social-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.btn-social {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-google {
+    background: #949090ff;
+}
+
+.btn-google:hover {
+    background: #d32f2f;
+}
+
+.btn-facebook {
+    background: #bdc0c5ff;
+}
+
+.btn-facebook:hover {
+    background: #155db2;
+}
+
+.auth-right form {
+    margin-top: 10px;
+}
+
+.auth-right .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    transition: border 0.3s ease;
+}
+
+.auth-right .form-control:focus {
+    border-color: #42a5f5;
+    outline: none;
+    box-shadow: 0 0 5px rgba(66,165,245,0.5);
+}
+
+.auth-right button[type="submit"] {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 12px;
+    background: #42a5f5;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+    margin-top: 10px;
+}
+
+.auth-right button[type="submit"]:hover {
+    background: #1e88e5;
+}
+
+.auth-right a {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.95rem;
+    color: #555;
+    text-decoration: none;
+}
+
+.auth-right a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .auth-card {
+        flex-direction: column;
+        width: 100%;
+        border-radius: 20px;
+    }
+    .auth-left {
+        height: 200px;
+        border-radius: 20px 20px 0 0;
+        padding: 20px;
+    }
+    .social-buttons {
+        justify-content: flex-start;
+        padding-left: 10px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-auth">
+    <div class="auth-card">
+        <div class="auth-left">
+            <h2>Bienvenue chez Se7a 3ltayer</h2>
+            <p>Créez votre compte pour accéder aux services médicaux et suivre votre santé facilement.</p>
+        </div>
+        <div class="auth-right">
+            <h3>S'inscrire</h3>
+
+            <div class="social-buttons">
+                <button class="btn-social btn-google">
+                    <img src="{{ asset('images/g.jpg') }}" width="20" alt="Google">
+                </button>
+                <button class="btn-social btn-facebook">
+                    <img src="{{ asset('images/f.jpg') }}" width="20" alt="Facebook">
+                </button>
+            </div>
+
+            {{ form_start(registrationForm) }}
+                {{ form_row(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Adresse e-mail'}}) }}
+                {{ form_row(registrationForm.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder': 'Mot de passe'}}) }}
+                {{ form_row(registrationForm.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder': 'Confirmer le mot de passe'}}) }}
+                <button type="submit">Créer mon compte</button>
+            {{ form_end(registrationForm) }}
+
+            <a href="{{ path('app_login') }}">Déjà un compte ? Se connecter</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cabinet Médical – Accueil{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4">Bienvenue au Cabinet Médical</h1>
+        <p class="lead">Prise de rendez-vous, gestion des patients et suivi médical simplifié.</p>
+        <a href="{{ path('app_login') }}" class="btn btn-primary btn-lg">Se connecter</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h4>Nos Médecins</h4>
+                <p>Consultez les profils de nos spécialistes.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h4>Rendez-vous</h4>
+                <p>Réservez et gérez vos consultations.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h4>Dossiers Patients</h4>
+                <p>Historique des consultations et traitements.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
