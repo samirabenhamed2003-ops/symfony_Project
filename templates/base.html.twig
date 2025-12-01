@@ -11,19 +11,31 @@
     {# Custom CSS #}
     <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
 
+    <style>
+        /* Logo navbar */
+        .navbar-brand .logo {
+            width: 50px;       /* largeur fixe raisonnable */
+            height: 50px;      /* garder proportions */
+            object-fit: cover; /* recadrage propre */
+            border-radius: 8px; /* optionnel : coins arrondis */
+        }
+
+        .navbar-brand .brand-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+    </style>
+
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-
-<!-- Promo bar -->
-
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="{{ path('home_public') }}">
-            <img src="{{ asset('images/logo.jpg') }}" alt="Se7a 3ltayer" class="logo">
-            <span class="brand-title">Se7a 3ltayer</span>
+            <img src="{{ asset('images/logo.png') }}" alt="Se7a 3al tayer" class="logo">
+            <span class="brand-title">Se7a 3al tayer</span>
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
@@ -33,7 +45,7 @@
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav ms-auto align-items-lg-center">
                 <li class="nav-item"><a class="nav-link" href="{{ path('home_public') }}">ACCUEIL</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">QUI SOMMES-NOUS ?</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ path('about') }}">QUI SOMMES-NOUS ?</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">PRATICIENS</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">CONTACT</a></li>
                 <li class="nav-item ms-3">
@@ -44,7 +56,7 @@
     </div>
 </nav>
 
-{# Main content #}
+<!-- Main content -->
 <main class="py-4">
     <div class="container">
         {% block body %}{% endblock %}

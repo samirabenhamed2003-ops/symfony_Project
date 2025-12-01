@@ -1,0 +1,171 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Qui sommes-nous - Se7a 3ltayer{% endblock %}
+
+{% block stylesheets %}
+<style>
+/* Header de la page */
+.about-header {
+    background: #f5f9ff;
+    padding: 60px 30px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+.about-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #0d1b2a;
+}
+
+.about-header p {
+    font-size: 1.1rem;
+    color: #1b263b;
+}
+
+/* Section équipe */
+.team-section {
+    margin-top: 50px;
+}
+
+.team-section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #0d1b2a;
+}
+
+.team-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.team-card {
+    width: 250px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    background: #fff;
+    transition: transform 0.3s ease;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+}
+
+.team-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.team-card h6 {
+    margin: 10px 0 5px;
+    font-weight: 600;
+}
+
+.team-card p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* Section valeurs */
+.values-section {
+    margin-top: 50px;
+    padding: 40px 20px;
+    background: #e3f2fd;
+    border-radius: 12px;
+}
+
+.values-section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-align: center;
+    color: #0d1b2a;
+}
+
+.values-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.values-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    width: 220px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.values-item h6 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.values-item p {
+    font-size: 0.9rem;
+    color: #555;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- Header -->
+<div class="about-header mb-5">
+    <h1>Qui sommes-nous ?</h1>
+    <p>Se7a 3ltayer est un cabinet médical moderne dédié à fournir des soins de qualité et un suivi personnalisé à tous nos patients. Notre objectif est de rendre la santé accessible et efficace.</p>
+</div>
+
+<!-- Notre équipe -->
+<div class="team-section">
+    <h2>Notre équipe</h2>
+    <div class="team-cards">
+        {% set team = [
+            { img: 'images/team/d1.jpg', name: 'Dr. Ahmed Ben Ali', role: 'Médecin généraliste' },
+            { img: 'images/team/d2.jpg', name: 'Dr. Salma Trabelsi', role: 'Pédiatre' },
+            { img: 'images/team/d3.jpg', name: 'Dr. Karim Mhiri', role: 'Cardiologue' },
+            { img: 'images/team/d4.jpg', name: 'Dr. Lina Farhat', role: 'Radiologue' }
+        ] %}
+
+        {% for member in team %}
+            <div class="team-card">
+                <img src="{{ asset(member.img) }}" alt="{{ member.name }}">
+                <h6>{{ member.name }}</h6>
+                <p>{{ member.role }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Nos valeurs -->
+<div class="values-section">
+    <h2>Nos valeurs</h2>
+    <div class="values-list">
+        {% set values = [
+            { title: 'Professionnalisme', desc: 'Une équipe qualifiée et expérimentée.' },
+            { title: 'Innovation', desc: 'Équipements modernes et pratiques médicales avancées.' },
+            { title: 'Écoute', desc: 'Suivi personnalisé et écoute attentive des patients.' },
+            { title: 'Accessibilité', desc: 'Soins efficaces pour tous, partout.' }
+        ] %}
+
+        {% for val in values %}
+            <div class="values-item">
+                <h6>{{ val.title }}</h6>
+                <p>{{ val.desc }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
