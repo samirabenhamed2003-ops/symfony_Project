@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réserver un rendez-vous{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+
+    {# Image d'en-tête avec texte de bienvenue #}
+    <div class="position-relative text-center mb-5">
+        <img src="{{ asset('images/mdc.jpg') }}" alt="Médecin" class="img-fluid rounded shadow" style="max-height: 300px; object-fit: cover;">
+        <div class="position-absolute top-50 start-50 translate-middle text-white p-3" style="background-color: rgba(114, 110, 110, 0.5); border-radius: 10px;">
+            <h1 class="fw-bold">Bienvenue sur notre portail de rendez-vous</h1>
+            <p class="fs-5">Prenez rendez-vous facilement avec nos médecins</p>
+        </div>
+    </div>
+
+
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white text-center rounded-top-4">
+                    <h3 class="mb-0">Demande de Rendez-vous</h3>
+                    <p class="mb-0">Remplissez le formulaire ci-dessous pour prendre rendez-vous</p>
+                </div>
+                <div class="card-body p-4">
+
+                    {# Affichage des messages flash success #}
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+
+                    {# Formulaire #}
+                    {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+
+                        <div class="mb-3">
+                            {{ form_label(form.nom) }}
+                            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom'}}) }}
+                            {{ form_errors(form.nom) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.email) }}
+                            {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Votre email'}}) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.telephone) }}
+                            {{ form_widget(form.telephone, {'attr': {'class': 'form-control', 'placeholder': 'Votre numéro de téléphone'}}) }}
+                            {{ form_errors(form.telephone) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.specialite) }}
+                            {{ form_widget(form.specialite, {'attr': {'class': 'form-select'}}) }}
+                            {{ form_errors(form.specialite) }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.date_rdv) }}
+                                {{ form_widget(form.date_rdv, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.date_rdv) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.heure_rdv) }}
+                                {{ form_widget(form.heure_rdv, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.heure_rdv) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.message) }}
+                            {{ form_widget(form.message, {'attr': {'class': 'form-control', 'rows': 4, 'placeholder': 'Votre message'}}) }}
+                            {{ form_errors(form.message) }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fs-5">Envoyer la demande</button>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
