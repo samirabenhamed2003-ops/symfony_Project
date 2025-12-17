@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Médecin{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>📋 Gestion des Rendez-vous</h1>
+        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">Déconnexion</a>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('warning') %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('info') %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">📅 Liste des Rendez-vous</h4>
+        </div>
+        <div class="card-body">
+            {% if rendezvous is empty %}
+    <p class="text-muted text-center py-4">Aucun rendez-vous pour le moment.</p>
+{% else %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Spécialité</th>
+                    <th>Date</th>
+                    <th>Heure</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rdv in rendezvous %}
+                    <tr>
+                        <td>{{ rdv.id }}</td>
+                        <td>{{ rdv.nom }}</td>
+                        <td>{{ rdv.email }}</td>
+                        <td>{{ rdv.telephone }}</td>
+                        <td><span class="badge bg-info">{{ rdv.specialite }}</span></td>
+                        <td>{{ rdv.dateRdv|date('d/m/Y') }}</td>
+                        <td>{{ rdv.heureRdv|date('H:i') }}</td>
+                        <td>
+                            {% if rdv.statut == 'en_attente' %}
+                                <span class="badge bg-warning text-dark">⏳ En attente</span>
+                            {% elseif rdv.statut == 'valide' %}
+                                <span class="badge bg-success">✅ Validé</span>
+                            {% elseif rdv.statut == 'refuse' %}
+                                <span class="badge bg-danger">❌ Refusé</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('medecin_rdv_details', {id: rdv.id}) }}" class="btn btn-sm btn-outline-primary">
+                                👁️ Détails
+                            </a>
+                            
+                            {% if rdv.statut == 'en_attente' %}
+                                <form method="post" action="{{ path('medecin_rdv_accepter', {id: rdv.id}) }}" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Accepter ce rendez-vous ?')">
+                                        ✅ Accepter
+                                    </button>
+                                </form>
+                                
+                                <form method="post" action="{{ path('medecin_rdv_refuser', {id: rdv.id}) }}" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Refuser ce rendez-vous ?')">
+                                        ❌ Refuser
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

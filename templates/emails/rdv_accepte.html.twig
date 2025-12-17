@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { background: white; max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 8px; }
+        .header { text-align: center; background: #28a745; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+        .content { padding: 20px; line-height: 1.6; }
+        .credentials { background: #f8f9fa; padding: 15px; border-left: 4px solid #28a745; margin: 20px 0; }
+        .button { display: inline-block; background: #007bff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Rendez-vous Accepté</h1>
+        </div>
+        
+        <div class="content">
+            <p>Bonjour <strong>{{ rdv.nom }}</strong>,</p>
+            
+            <p>Nous avons le plaisir de vous informer que votre demande de rendez-vous a été <strong>acceptée</strong> !</p>
+            
+            <h3>📅 Détails du rendez-vous :</h3>
+            <ul>
+                <li><strong>Spécialité :</strong> {{ rdv.specialite }}</li>
+                <li><strong>Date :</strong> {{ rdv.dateRdv|date('d/m/Y') }}</li>
+                <li><strong>Heure :</strong> {{ rdv.heureRdv|date('H:i') }}</li>
+            </ul>
+
+       {% if motDePasse is defined and motDePasse %}
+    <div class="credentials">
+        <h3>🔐 Vos identifiants de connexion</h3>
+        <p>Un compte patient a été créé pour vous. Voici vos identifiants :</p>
+        <p>
+            <strong>Email :</strong> {{ rdv.email }}<br>
+            <strong>Mot de passe :</strong> <code style="background:#fff3cd; padding:5px 10px; border-radius:3px;">{{ motDePasse }}</code>
+        </p>
+        <p><small>⚠️ Nous vous recommandons de changer ce mot de passe après votre première connexion.</small></p>
+    </div>
+
+    <a href="{{ url('app_login') }}" class="button">Se connecter</a>
+{% else %}
+    <p>Vous pouvez vous connecter avec votre compte existant pour consulter vos rendez-vous.</p>
+    <a href="{{ url('app_login') }}" class="button">Accéder à mon compte</a>
+{% endif %}
+
+
+            <p style="margin-top: 30px;">À bientôt au cabinet !</p>
+        </div>
+
+        <div class="footer">
+            <p>Cabinet Médical | Email: contact@cabinet-medical.com</p>
+            <p>Ce message est automatique, merci de ne pas y répondre.</p>
+        </div>
+    </div>
+</body>
+</html>

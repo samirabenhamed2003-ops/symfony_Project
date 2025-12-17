@@ -1,0 +1,43 @@
+===========================================
+CONFIGURATION GMAIL POUR SYMFONY MAILER
+===========================================
+
+ÉTAPE 1 : Créer un mot de passe d'application Gmail
+----------------------------------------------------
+1. Va sur https://myaccount.google.com/
+2. Sécurité → Validation en 2 étapes (active-la si pas déjà fait)
+3. Sécurité → Mots de passe d'application
+4. Crée un nouveau mot de passe d'application (ex: "Symfony")
+5. Copie le mot de passe de 16 caractères généré
+
+ÉTAPE 2 : Configurer .env.local
+--------------------------------
+Crée ou modifie le fichier .env.local à la racine du projet avec :
+
+APP_SECRET=your_secret_key
+
+# Configuration Gmail pour Symfony Mailer
+# Format: gmail://EMAIL:MOT_DE_PASSE_APPLICATION@default
+MAILER_DSN=gmail://maawianwe@gmail.com:TON_MOT_DE_PASSE_APPLICATION@default
+
+Remplace TON_MOT_DE_PASSE_APPLICATION par le mot de passe d'application de 16 caractères
+que tu as créé dans l'étape 1.
+
+IMPORTANT : 
+- Pas d'espaces dans le DSN
+- Pas de guillemets autour du DSN
+- Le mot de passe d'application doit être celui généré par Google (pas ton mot de passe Gmail normal)
+
+ÉTAPE 3 : Redémarrer le serveur
+--------------------------------
+Après avoir modifié .env.local, redémarre ton serveur PHP :
+php -S 127.0.0.1:8000 -t public
+
+ÉTAPE 4 : Tester
+----------------
+1. Fais une demande de rendez-vous
+2. Connecte-toi en médecin
+3. Accepte le rendez-vous
+4. Vérifie la boîte email du patient (et le dossier spam)
+
+===========================================

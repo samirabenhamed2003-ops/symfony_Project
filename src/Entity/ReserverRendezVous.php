@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\User;  // Assure-toi que l'import de User est présent
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -12,6 +14,11 @@ class ReserverRendezVous
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+     // 🆕 AJOUTE CETTE RELATION ICI
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: "SET NULL")]
+    private ?User $patient = null;
 
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
@@ -34,12 +41,26 @@ class ReserverRendezVous
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $message = null;
 
-    #[ORM\Column(type: "datetime")]
-    private ?\DateTimeInterface $created_at = null;
+    #[ORM\Column(type: "datetime", name: "created_at")]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::STRING, length: 20, options: ['default' => 'en_attente'])]
+    private ?string $statut = 'en_attente';
+
+       // Relation ManyToOne avec l'entité User (Médecin)
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)] // Le rendez-vous peut être créé sans médecin assigné initialement
+    private ?User $medecin = null;
+
+    /*#[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $patient = null;*/
+
 
     public function __construct()
     {
-        $this->created_at = new \DateTime();
+        $this->createdAt = new \DateTime();
+        $this->statut = 'en_attente';
     }
 
     public function getId(): ?int
@@ -126,6 +147,54 @@ class ReserverRendezVous
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): static
+    {
+        $this->statut = $statut;
+        return $this;
+    }
+
+    /* public function getPatient(): ?User
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(?User $patient): static
+    {
+        $this->patient = $patient;
+        return $this;
+    }*/
+
+    // GETTERS ET SETTERS...
+
+    public function getPatient(): ?User
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(?User $patient): static
+    {
+        $this->patient = $patient;
+        return $this;
+    }
+
+
+    // Getters et setters...
+    public function getMedecin(): ?User
+    {
+        return $this->medecin;
+    }
+
+    public function setMedecin(?User $medecin): self
+    {
+        $this->medecin = $medecin;
+        return $this;
     }
 }

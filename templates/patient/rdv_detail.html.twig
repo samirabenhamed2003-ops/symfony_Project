@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Rendez-vous{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>📋 Détails du Rendez-vous</h1>
+        <div>
+            <a href="{{ path('patient_dashboard') }}" class="btn btn-outline-secondary me-2">← Retour</a>
+            <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">Déconnexion</a>
+        </div>
+    </div>
+
+    {% if rdv %}
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card shadow-sm">
+                    <div class="card-header {% if rdv.statut == 'valide' %}bg-success text-white{% elseif rdv.statut == 'refuse' %}bg-danger text-white{% else %}bg-warning text-dark{% endif %}">
+                        <h4 class="mb-0">
+                            {% if rdv.statut == 'en_attente' %}
+                                ⏳ Rendez-vous en attente
+                            {% elseif rdv.statut == 'valide' %}
+                                ✅ Rendez-vous validé
+                            {% elseif rdv.statut == 'refuse' %}
+                                ❌ Rendez-vous refusé
+                            {% endif %}
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h5 class="text-muted mb-3">📅 Informations du rendez-vous</h5>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong>Spécialité :</strong></td>
+                                        <td><span class="badge bg-info">{{ rdv.specialite }}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Date :</strong></td>
+                                        <td>{{ rdv.dateRdv|date('d/m/Y') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Heure :</strong></td>
+                                        <td>{{ rdv.heureRdv|date('H:i') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Statut :</strong></td>
+                                        <td>
+                                            {% if rdv.statut == 'en_attente' %}
+                                                <span class="badge bg-warning text-dark">⏳ En attente</span>
+                                            {% elseif rdv.statut == 'valide' %}
+                                                <span class="badge bg-success">✅ Validé</span>
+                                            {% elseif rdv.statut == 'refuse' %}
+                                                <span class="badge bg-danger">❌ Refusé</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="text-muted mb-3">👤 Vos informations</h5>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong>Nom :</strong></td>
+                                        <td>{{ rdv.nom }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Email :</strong></td>
+                                        <td>{{ rdv.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Téléphone :</strong></td>
+                                        <td>{{ rdv.telephone }}</td>
+                                    </tr>
+                                    {% if rdv.medecin %}
+                                    <tr>
+                                        <td><strong>Médecin :</strong></td>
+                                        <td>{{ rdv.medecin.email }}</td>
+                                    </tr>
+                                    {% endif %}
+                                </table>
+                            </div>
+                        </div>
+
+                        {% if rdv.message %}
+                            <div class="mb-4">
+                                <h5 class="text-muted mb-2">💬 Votre message</h5>
+                                <div class="alert alert-light border">
+                                    <p class="mb-0">{{ rdv.message }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="alert alert-info">
+                            <small>
+                                <strong>📝 Date de demande :</strong> {{ rdv.createdAt|date('d/m/Y à H:i') }}
+                            </small>
+                        </div>
+
+                        {% if rdv.statut == 'valide' %}
+                            <div class="alert alert-success">
+                                <strong>✅ Votre rendez-vous a été accepté !</strong><br>
+                                Merci de vous présenter à l'heure prévue. En cas d'empêchement, veuillez nous contacter.
+                            </div>
+                        {% elseif rdv.statut == 'refuse' %}
+                            <div class="alert alert-danger">
+                                <strong>❌ Votre demande de rendez-vous a été refusée.</strong><br>
+                                N'hésitez pas à nous contacter pour plus d'informations ou pour prendre un nouveau rendez-vous.
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning">
+                                <strong>⏳ Votre demande est en cours de traitement.</strong><br>
+                                Vous recevrez un email de confirmation dès que votre rendez-vous sera validé.
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ path('patient_dashboard') }}" class="btn btn-primary">Retour à mes rendez-vous</a>
+                        <a href="{{ path('app_home') }}" class="btn btn-outline-secondary">Retour à l'accueil</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            <h4>Rendez-vous introuvable</h4>
+            <p>Le rendez-vous demandé n'existe pas ou vous n'avez pas l'autorisation de le consulter.</p>
+            <a href="{{ path('patient_dashboard') }}" class="btn btn-primary">Retour à mes rendez-vous</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

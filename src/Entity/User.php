@@ -32,6 +32,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    // Nouvelle propriété pour la spécialité
+    #[ORM\Column(type: "string", length: 100, nullable: true)]
+    private ?string $specialite = null;
+
+    // Getter et Setter pour 'specialite'
+    public function getSpecialite(): ?string
+    {
+        return $this->specialite;
+    }
+
+    public function setSpecialite(?string $specialite): static
+    {
+        $this->specialite = $specialite;
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { background: white; max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 8px; }
+        .header { text-align: center; background: #dc3545; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+        .content { padding: 20px; line-height: 1.6; }
+        .info-box { background: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0; }
+        .button { display: inline-block; background: #007bff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Mise à jour de votre demande</h1>
+        </div>
+        
+        <div class="content">
+            <p>Bonjour <strong>{{ rdv.nom }}</strong>,</p>
+            
+            <p>Nous vous informons que votre demande de rendez-vous pour :</p>
+            
+            <ul>
+                <li><strong>Spécialité :</strong> {{ rdv.specialite }}</li>
+                <li><strong>Date souhaitée :</strong> {{ rdv.dateRdv|date('d/m/Y') }}</li>
+                <li><strong>Heure souhaitée :</strong> {{ rdv.heureRdv|date('H:i') }}</li>
+            </ul>
+
+            <p>...n'a malheureusement pas pu être acceptée.</p>
+
+            <div class="info-box">
+                <p><strong>💡 Que faire maintenant ?</strong></p>
+                <p>Nous vous invitons à nous contacter par téléphone pour trouver un créneau disponible qui conviendra mieux.</p>
+            </div>
+
+            <p><strong>📞 Contact :</strong> 01 23 45 67 89</p>
+            <p><strong>📧 Email :</strong> contact@cabinet-medical.com</p>
+
+            <p style="margin-top: 30px;">Nous nous excusons pour ce désagrément et restons à votre disposition.</p>
+        </div>
+
+        <div class="footer">
+            <p>Cabinet Médical | Email: contact@cabinet-medical.com</p>
+            <p>Ce message est automatique, merci de ne pas y répondre.</p>
+        </div>
+    </div>
+</body>
+</html>

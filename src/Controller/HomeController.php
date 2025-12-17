@@ -1,6 +1,11 @@
 <?php
 
 namespace App\Controller;
+//namespace App\Entity;
+use App\Entity\ReserverRendezVous;
+
+
+use Doctrine\ORM\EntityManagerInterface;  // Assure-toi que cette ligne est présente
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,10 +20,18 @@ class HomeController extends AbstractController
     }
 
     #[Route('/home', name: 'app_home')]
-    public function userHome(): Response
-    {
-        return $this->render('home/index.html.twig');
-    }
+  public function userHome(EntityManagerInterface $em): Response
+{
+    $user = $this->getUser(); // Médecin connecté
+    $rendezvous = $em->getRepository(ReserverRendezVous::class)->findBy([
+        'medecin' => $user
+    ]);
+
+    return $this->render('medecin/dashboard.html.twig', [
+        'rendezvous' => $rendezvous // Passe la variable 'rendezvous' ici
+    ]);
+}
+
 
     #[Route('/qui-sommes-nous', name: 'about')]
     public function about(): Response
