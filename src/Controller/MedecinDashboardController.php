@@ -22,22 +22,105 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class MedecinDashboardController extends AbstractController
 {
     #[Route('/dashboard', name: 'medecin_dashboard')]
-    public function dashboard(ReserverRendezVousRepository $rdvRepo): Response
+    public function dashboard(Request $request, ReserverRendezVousRepository $rdvRepo): Response
     {
         $medecin = $this->getUser();
         
-        // Récupérer les rendez-vous de la spécialité du médecin connecté
-        // ou les rendez-vous qui lui sont assignés
-        $rendezvous = $rdvRepo->createQueryBuilder('r')
+        // Récupérer tous les rendez-vous du médecin
+        $qb = $rdvRepo->createQueryBuilder('r')
+            ->where('r.medecin = :medecin OR r.specialite = :specialite')
+            ->setParameter('medecin', $medecin)
+            ->setParameter('specialite', $medecin->getSpecialite());
+
+        // Filtres
+        $statutFilter = $request->query->get('statut');
+        $search = $request->query->get('search');
+        $dateFilter = $request->query->get('date');
+
+        if ($statutFilter && $statutFilter !== 'tous') {
+            $qb->andWhere('r.statut = :statut')
+               ->setParameter('statut', $statutFilter);
+        }
+
+        if ($search) {
+            $qb->andWhere('r.nom LIKE :search OR r.email LIKE :search OR r.telephone LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($dateFilter) {
+            $qb->andWhere('r.date_rdv = :date')
+               ->setParameter('date', new \DateTime($dateFilter));
+        }
+
+        $rendezvous = $qb->orderBy('r.date_rdv', 'ASC')
+            ->addOrderBy('r.heure_rdv', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        // Calculer les statistiques
+        $totalRdv = $rdvRepo->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
             ->where('r.medecin = :medecin OR r.specialite = :specialite')
             ->setParameter('medecin', $medecin)
             ->setParameter('specialite', $medecin->getSpecialite())
-            ->orderBy('r.createdAt', 'DESC')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $enAttente = $rdvRepo->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->where('(r.medecin = :medecin OR r.specialite = :specialite) AND r.statut = :statut')
+            ->setParameter('medecin', $medecin)
+            ->setParameter('specialite', $medecin->getSpecialite())
+            ->setParameter('statut', 'en_attente')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $valides = $rdvRepo->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->where('(r.medecin = :medecin OR r.specialite = :specialite) AND r.statut = :statut')
+            ->setParameter('medecin', $medecin)
+            ->setParameter('specialite', $medecin->getSpecialite())
+            ->setParameter('statut', 'valide')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $refuses = $rdvRepo->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->where('(r.medecin = :medecin OR r.specialite = :specialite) AND r.statut = :statut')
+            ->setParameter('medecin', $medecin)
+            ->setParameter('specialite', $medecin->getSpecialite())
+            ->setParameter('statut', 'refuse')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Rendez-vous à venir (aujourd'hui et après)
+        $aujourdhui = new \DateTime();
+        $aujourdhui->setTime(0, 0, 0);
+        
+        $rdvAvenir = $rdvRepo->createQueryBuilder('r')
+            ->where('(r.medecin = :medecin OR r.specialite = :specialite) AND r.statut = :statut AND r.date_rdv >= :aujourdhui')
+            ->setParameter('medecin', $medecin)
+            ->setParameter('specialite', $medecin->getSpecialite())
+            ->setParameter('statut', 'valide')
+            ->setParameter('aujourdhui', $aujourdhui)
+            ->orderBy('r.date_rdv', 'ASC')
+            ->addOrderBy('r.heure_rdv', 'ASC')
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
 
         return $this->render('medecin/dashboard.html.twig', [
             'rendezvous' => $rendezvous,
+            'stats' => [
+                'total' => $totalRdv,
+                'en_attente' => $enAttente,
+                'valides' => $valides,
+                'refuses' => $refuses,
+            ],
+            'rdv_avenir' => $rdvAvenir,
+            'statut_filter' => $statutFilter ?? 'tous',
+            'search' => $search ?? '',
+            'date_filter' => $dateFilter ?? '',
         ]);
     }
 
