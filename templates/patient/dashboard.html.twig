@@ -26,17 +26,30 @@
                 <div class="row">
                     {% for rdv in mes_rendez_vous %}
                         <div class="col-md-6 mb-3">
-                            <div class="card h-100 {% if rdv.statut == 'valide' %}border-success{% elseif rdv.statut == 'refuse' %}border-danger{% else %}border-warning{% endif %}">
+                            <div class="card h-100
+                                {% if rdv.statut == 'valide' %}
+                                    border-success
+                                {% elseif rdv.statut == 'refuse' %}
+                                    border-danger
+                                {% elseif rdv.statut == 'annule_par_patient' %}
+                                    border-secondary
+                                {% else %}
+                                    border-warning
+                                {% endif %}
+                            ">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-3">
                                         <h5 class="card-title mb-0">{{ rdv.specialite }}</h5>
-                                        {% if rdv.statut == 'en_attente' %}
+                                       {% if rdv.statut == 'en_attente' %}
                                             <span class="badge bg-warning text-dark">⏳ En attente</span>
                                         {% elseif rdv.statut == 'valide' %}
                                             <span class="badge bg-success">✅ Validé</span>
                                         {% elseif rdv.statut == 'refuse' %}
                                             <span class="badge bg-danger">❌ Refusé</span>
+                                        {% elseif rdv.statut == 'annule_par_patient' %}
+                                            <span class="badge bg-secondary">🚫 Annulé</span>
                                         {% endif %}
+
                                     </div>
                                     
                                     <p class="mb-2">
@@ -65,8 +78,6 @@
         </div>
     </div>
 
-    <div class="mt-4 text-center">
-        <a href="{{ path('app_home') }}" class="btn btn-outline-primary">← Retour à l'accueil</a>
-    </div>
+   
 </div>
 {% endblock %}

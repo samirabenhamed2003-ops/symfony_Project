@@ -22,14 +22,23 @@ class HomeController extends AbstractController
     #[Route('/home', name: 'app_home')]
   public function userHome(EntityManagerInterface $em): Response
 {
-    $user = $this->getUser(); // Médecin connecté
+   /* $user = $this->getUser(); // Médecin connecté
     $rendezvous = $em->getRepository(ReserverRendezVous::class)->findBy([
         'medecin' => $user
     ]);
 
     return $this->render('medecin/dashboard.html.twig', [
         'rendezvous' => $rendezvous // Passe la variable 'rendezvous' ici
-    ]);
+    ]);*/
+        if ($this->isGranted('ROLE_DOCTOR')) {
+        return $this->redirectToRoute('medecin_dashboard');
+    }
+
+    if ($this->isGranted('ROLE_PATIENT')) {
+        return $this->redirectToRoute('patient_dashboard');
+    }
+
+    return $this->redirectToRoute('app_login');
 }
 
 

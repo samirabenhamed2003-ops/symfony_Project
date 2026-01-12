@@ -1,0 +1,14 @@
+<h2>❌ Rendez-vous annulé par le patient</h2>
+
+<p>Bonjour Docteur,</p>
+
+<p>Le patient <strong>{{ rdv.nom }}</strong> a annulé son rendez-vous.</p>
+
+<ul>
+    <li><strong>Date :</strong> {{ rdv.dateRdv|date('d/m/Y') }}</li>
+    <li><strong>Heure :</strong> {{ rdv.heureRdv|date('H:i') }}</li>
+    <li><strong>Email patient :</strong> {{ rdv.email }}</li>
+</ul>
+
+<p>Cordialement,<br>
+<strong>MyCabinet</strong></p>
