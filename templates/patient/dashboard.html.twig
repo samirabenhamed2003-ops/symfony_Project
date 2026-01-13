@@ -1,83 +1,81 @@
-{% extends 'base.html.twig' %}
+{% extends 'dashboard_base.html.twig' %}
 
-{% block title %}Mon Espace Patient{% endblock %}
+{% block title %}Mon Dashboard{% endblock %}
+
+{% block page_title %}Mon Dashboard{% endblock %}
+
+{% block sidebar_menu %}
+    <a href="{{ path('patient_dashboard') }}" class="menu-item active">
+        <i class="bi bi-calendar-check"></i>
+        <span>Mes Rendez-vous</span>
+    </a>
+    <a href="{{ path('app_home') }}" class="menu-item">
+        <i class="bi bi-house"></i>
+        <span>Accueil</span>
+    </a>
+{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>👤 Mon Espace Patient</h1>
         <div>
-            <span class="me-3">Bienvenue, <strong>{{ app.user.email }}</strong></span>
-            <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">Déconnexion</a>
+            <h5 class="mb-0">Mes Rendez-vous</h5>
+            <p class="text-muted mb-0">Gérez vos rendez-vous médicaux</p>
         </div>
+        <a href="{{ path('app_rendez_vous') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nouveau rendez-vous
+        </a>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">📅 Mes Rendez-vous</h4>
+    {% if mes_rendez_vous is empty %}
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-calendar-x fs-1 text-muted"></i>
+                <p class="text-muted mt-3">Vous n'avez aucun rendez-vous pour le moment.</p>
+                <a href="{{ path('app_rendez_vous') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Prendre un rendez-vous
+                </a>
+            </div>
         </div>
-        <div class="card-body">
-            {% if mes_rendez_vous is empty %}
-                <div class="text-center py-5">
-                    <p class="text-muted">Vous n'avez aucun rendez-vous pour le moment.</p>
-                    <a href="{{ path('app_home') }}" class="btn btn-primary mt-3">Prendre un rendez-vous</a>
+    {% else %}
+     <div class="row">
+    {% for rdv in mes_rendez_vous %}
+        <div class="col-md-6 mb-4">
+            <div class="card rdv-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="rdv-date">
+                            {{ rdv.dateRdv|date('d/m/Y') }} – {{ rdv.heureRdv|date('H:i') }}
+                        </span>
+
+                        <span class="rdv-status
+                            {% if rdv.statut == 'valide' %} bg-success text-white
+                            {% elseif rdv.statut == 'en_attente' %} bg-warning text-dark
+                            {% elseif rdv.statut == 'refuse' %} bg-danger text-white
+                            {% endif %}
+                        ">
+                            {{ rdv.statut|replace({'_':' '})|capitalize }}
+                        </span>
+                    </div>
+
+                    <p class="mb-2">
+                        <i class="bi bi-person-badge"></i>
+                        <strong>Médecin :</strong> {{ rdv.medecin.email ?? '—' }}
+                    </p>
+
+                    <p class="mb-3">
+                        <i class="bi bi-heart-pulse"></i>
+                        <strong>Spécialité :</strong> {{ rdv.specialite }}
+                    </p>
+
+                    <a href="{{ path('patient_rdv_detail', {id: rdv.id}) }}"
+                       class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-eye"></i> Voir détails
+                    </a>
                 </div>
-            {% else %}
-                <div class="row">
-                    {% for rdv in mes_rendez_vous %}
-                        <div class="col-md-6 mb-3">
-                            <div class="card h-100
-                                {% if rdv.statut == 'valide' %}
-                                    border-success
-                                {% elseif rdv.statut == 'refuse' %}
-                                    border-danger
-                                {% elseif rdv.statut == 'annule_par_patient' %}
-                                    border-secondary
-                                {% else %}
-                                    border-warning
-                                {% endif %}
-                            ">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-3">
-                                        <h5 class="card-title mb-0">{{ rdv.specialite }}</h5>
-                                       {% if rdv.statut == 'en_attente' %}
-                                            <span class="badge bg-warning text-dark">⏳ En attente</span>
-                                        {% elseif rdv.statut == 'valide' %}
-                                            <span class="badge bg-success">✅ Validé</span>
-                                        {% elseif rdv.statut == 'refuse' %}
-                                            <span class="badge bg-danger">❌ Refusé</span>
-                                        {% elseif rdv.statut == 'annule_par_patient' %}
-                                            <span class="badge bg-secondary">🚫 Annulé</span>
-                                        {% endif %}
-
-                                    </div>
-                                    
-                                    <p class="mb-2">
-                                        <strong>📅 Date :</strong> {{ rdv.dateRdv|date('d/m/Y') }}<br>
-                                        <strong>🕐 Heure :</strong> {{ rdv.heureRdv|date('H:i') }}
-                                    </p>
-
-                                    {% if rdv.message %}
-                                        <p class="text-muted small mb-2">
-                                            <strong>Votre message :</strong> {{ rdv.message|slice(0, 80) }}{% if rdv.message|length > 80 %}...{% endif %}
-                                        </p>
-                                    {% endif %}
-
-                                    <a href="{{ path('patient_rdv_detail', {id: rdv.id}) }}" class="btn btn-sm btn-outline-primary mt-2">
-                                        Voir les détails →
-                                    </a>
-                                </div>
-                                <div class="card-footer text-muted small">
-                                    Demandé le {{ rdv.createdAt|date('d/m/Y à H:i') }}
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
+            </div>
         </div>
-    </div>
-
-   
+    {% endfor %}
 </div>
+
+    {% endif %}
 {% endblock %}

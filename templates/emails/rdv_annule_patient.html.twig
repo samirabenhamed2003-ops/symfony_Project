@@ -1,14 +1,43 @@
-<h2>❌ Rendez-vous annulé par le patient</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { background: white; max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 8px; }
+        .header { text-align: center; background: #dc3545; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+        .content { padding: 20px; line-height: 1.6; }
+        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚠️ Annulation de Rendez-vous</h1>
+        </div>
+        
+        <div class="content">
+            <p>Bonjour,</p>
+            
+            <p>Nous vous informons que le rendez-vous suivant a été <strong>annulé par le patient</strong> :</p>
+            
+            <h3>📅 Détails du rendez-vous :</h3>
+            <ul>
+                <li><strong>Patient :</strong> {{ rdv.nom }}</li>
+                <li><strong>Email :</strong> {{ rdv.email }}</li>
+                <li><strong>Téléphone :</strong> {{ rdv.telephone }}</li>
+                <li><strong>Spécialité :</strong> {{ rdv.specialite }}</li>
+                <li><strong>Date :</strong> {{ rdv.dateRdv|date('d/m/Y') }}</li>
+                <li><strong>Heure :</strong> {{ rdv.heureRdv|date('H:i') }}</li>
+            </ul>
 
-<p>Bonjour Docteur,</p>
+            <p>Vous pouvez consulter votre dashboard pour voir les détails complets.</p>
+        </div>
 
-<p>Le patient <strong>{{ rdv.nom }}</strong> a annulé son rendez-vous.</p>
-
-<ul>
-    <li><strong>Date :</strong> {{ rdv.dateRdv|date('d/m/Y') }}</li>
-    <li><strong>Heure :</strong> {{ rdv.heureRdv|date('H:i') }}</li>
-    <li><strong>Email patient :</strong> {{ rdv.email }}</li>
-</ul>
-
-<p>Cordialement,<br>
-<strong>MyCabinet</strong></p>
+        <div class="footer">
+            <p>Cabinet Médical | Email: contact@cabinet-medical.com</p>
+            <p>Ce message est automatique, merci de ne pas y répondre.</p>
+        </div>
+    </div>
+</body>
+</html>

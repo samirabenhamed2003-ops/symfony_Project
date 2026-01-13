@@ -1,0 +1,90 @@
+{% extends 'dashboard_base.html.twig' %}
+
+{% block title %}Mes Patients{% endblock %}
+
+{% block page_title %}Mes Patients{% endblock %}
+
+{% block sidebar_menu %}
+    <a href="{{ path('medecin_dashboard') }}" class="menu-item">
+        <i class="bi bi-speedometer2"></i>
+        <span>Dashboard</span>
+    </a>
+    <a href="{{ path('medecin_patients') }}" class="menu-item active">
+        <i class="bi bi-people"></i>
+        <span>Mes Patients</span>
+    </a>
+    <a href="{{ path('app_home') }}" class="menu-item">
+        <i class="bi bi-house"></i>
+        <span>Accueil</span>
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h5 class="mb-0">Liste de mes Patients</h5>
+            <p class="text-muted mb-0">Tous les patients ayant pris rendez-vous avec vous</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+        {% if patients is empty %}
+            <div class="text-center py-5">
+                <i class="bi bi-people fs-1 text-muted"></i>
+                <p class="text-muted mt-3">Aucun patient pour le moment.</p>
+            </div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Téléphone</th>
+                            <th class="text-center">Nb Rendez-vous</th>
+                            <th>Dernier Rendez-vous</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for patient in patients %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                                            {{ (patient.nom ?? 'U')|first|upper }}
+                                        </div>
+                                        <strong>{{ patient.nom ?? 'N/A' }}</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <i class="bi bi-envelope text-muted"></i>
+                                    {{ patient.email ?? '-' }}
+                                </td>
+                                <td>
+                                    <i class="bi bi-telephone text-muted"></i>
+                                    {{ patient.telephone ?? '-' }}
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary">{{ patient.nbRendezVous ?? 0 }}</span>
+                                </td>
+                                <td>
+                                    {% if patient.dernierRdv %}
+                                        {{ patient.dernierRdv|date('d/m/Y') }}
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <a href="{{ path('medecin_dashboard', {search: patient.email ?? ''}) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-calendar-check"></i> Voir rendez-vous
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

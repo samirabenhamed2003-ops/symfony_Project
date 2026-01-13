@@ -1,302 +1,231 @@
-{% extends 'base.html.twig' %}
+{% extends 'dashboard_base.html.twig' %}
 
 {% block title %}Dashboard Médecin{% endblock %}
 
-{% block stylesheets %}
-<style>
-    .stat-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-        border-left: 4px solid;
-    }
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
-    }
-    .stat-card.total { border-left-color: #0d6efd; }
-    .stat-card.en-attente { border-left-color: #ffc107; }
-    .stat-card.valides { border-left-color: #198754; }
-    .stat-card.refuses { border-left-color: #dc3545; }
-    
-    .rdv-card {
-        transition: all 0.3s;
-        border-left: 4px solid transparent;
-    }
-    .rdv-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        transform: translateX(5px);
-    }
-    .rdv-card.en-attente { border-left-color: #ffc107; }
-    .rdv-card.valide { border-left-color: #198754; }
-    .rdv-card.refuse { border-left-color: #dc3545; }
-    
-    .filter-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 30px;
-    }
-    
-    .upcoming-rdv {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        border-radius: 10px;
-        padding: 20px;
-        color: white;
-    }
-    
-    .upcoming-rdv-item {
-        background: rgba(255,255,255,0.2);
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 10px;
-        backdrop-filter: blur(10px);
-    }
-</style>
+{% block page_title %}Dashboard Médecin{% endblock %}
+
+{% block sidebar_menu %}
+    <a href="{{ path('medecin_dashboard') }}" class="menu-item active">
+        <i class="bi bi-speedometer2"></i>
+        <span>Dashboard</span>
+    </a>
+    <a href="{{ path('medecin_patients') }}" class="menu-item">
+        <i class="bi bi-people"></i>
+        <span>Mes Patients</span>
+    </a>
+    <a href="{{ path('app_home') }}" class="menu-item">
+        <i class="bi bi-house"></i>
+        <span>Accueil</span>
+    </a>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid mt-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="mb-1">👨‍⚕️ Dashboard Médecin</h1>
-            <p class="text-muted mb-0">Bienvenue, <strong>{{ app.user.email }}</strong> | Spécialité: <span class="badge bg-info">{{ app.user.specialite }}</span></p>
-        </div>
-        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">
-            <i class="bi bi-box-arrow-right"></i> Déconnexion
-        </a>
-    </div>
-
-    <!-- Flash Messages -->
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>✅ Succès !</strong> {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {% endfor %}
-
-    {% for message in app.flashes('warning') %}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>⚠️ Attention !</strong> {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {% endfor %}
-
-    {% for message in app.flashes('info') %}
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <strong>ℹ️ Information</strong> {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {% endfor %}
-
     <!-- Statistiques -->
     <div class="row mb-4">
         <div class="col-md-3 mb-3">
-            <div class="card stat-card total shadow-sm h-100">
+            <div class="card stat-card shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-muted mb-2">Total Rendez-vous</h6>
-                            <h2 class="mb-0 text-primary">{{ stats.total }}</h2>
+                            <p class="text-muted mb-1 small">Total</p>
+                            <h3 class="stat-number text-primary mb-0">{{ stats.total }}</h3>
                         </div>
-                        <div class="fs-1 text-primary opacity-25">📋</div>
+                        <div class="fs-1 text-primary opacity-25">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card stat-card en-attente shadow-sm h-100">
+            <div class="card stat-card shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-muted mb-2">En Attente</h6>
-                            <h2 class="mb-0 text-warning">{{ stats.en_attente }}</h2>
+                            <p class="text-muted mb-1 small">En Attente</p>
+                            <h3 class="stat-number text-warning mb-0">{{ stats.en_attente }}</h3>
                         </div>
-                        <div class="fs-1 text-warning opacity-25">⏳</div>
+                        <div class="fs-1 text-warning opacity-25">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card stat-card valides shadow-sm h-100">
+            <div class="card stat-card shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-muted mb-2">Validés</h6>
-                            <h2 class="mb-0 text-success">{{ stats.valides }}</h2>
+                            <p class="text-muted mb-1 small">Validés</p>
+                            <h3 class="stat-number text-success mb-0">{{ stats.valides }}</h3>
                         </div>
-                        <div class="fs-1 text-success opacity-25">✅</div>
+                        <div class="fs-1 text-success opacity-25">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card stat-card refuses shadow-sm h-100">
+            <div class="card stat-card shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-muted mb-2">Refusés</h6>
-                            <h2 class="mb-0 text-danger">{{ stats.refuses }}</h2>
+                            <p class="text-muted mb-1 small">Refusés</p>
+                            <h3 class="stat-number text-danger mb-0">{{ stats.refuses }}</h3>
                         </div>
-                        <div class="fs-1 text-danger opacity-25">❌</div>
+                        <div class="fs-1 text-danger opacity-25">
+                            <i class="bi bi-x-circle"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <!-- Colonne principale : Liste des rendez-vous -->
-        <div class="col-lg-8">
-            <!-- Filtres -->
-            <div class="filter-section text-white mb-4">
-                <h5 class="mb-3 text-white">🔍 Filtres de recherche</h5>
-                <form method="get" action="{{ path('medecin_dashboard') }}" class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label text-white">Statut</label>
-                        <select name="statut" class="form-select">
-                            <option value="tous" {{ statut_filter == 'tous' ? 'selected' : '' }}>Tous les statuts</option>
-                            <option value="en_attente" {{ statut_filter == 'en_attente' ? 'selected' : '' }}>En attente</option>
-                            <option value="valide" {{ statut_filter == 'valide' ? 'selected' : '' }}>Validés</option>
-                            <option value="refuse" {{ statut_filter == 'refuse' ? 'selected' : '' }}>Refusés</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label text-white">Recherche</label>
-                        <input type="text" name="search" class="form-control" placeholder="Nom, email, téléphone..." value="{{ search }}">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label text-white">Date</label>
-                        <input type="date" name="date" class="form-control" value="{{ date_filter }}">
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-light me-2">🔍 Rechercher</button>
-                        <a href="{{ path('medecin_dashboard') }}" class="btn btn-outline-light">🔄 Réinitialiser</a>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Liste des rendez-vous -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">📅 Liste des Rendez-vous ({{ rendezvous|length }})</h5>
+    <!-- Filtres et Recherche -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" action="{{ path('medecin_dashboard') }}" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Statut</label>
+                    <select name="statut" class="form-select">
+                        <option value="tous" {{ statut_filter == 'tous' ? 'selected' : '' }}>Tous</option>
+                        <option value="en_attente" {{ statut_filter == 'en_attente' ? 'selected' : '' }}>En attente</option>
+                        <option value="valide" {{ statut_filter == 'valide' ? 'selected' : '' }}>Validés</option>
+                        <option value="refuse" {{ statut_filter == 'refuse' ? 'selected' : '' }}>Refusés</option>
+                    </select>
                 </div>
-                <div class="card-body">
-                    {% if rendezvous is empty %}
-                        <div class="text-center py-5">
-                            <div class="fs-1 mb-3">📭</div>
-                            <p class="text-muted">Aucun rendez-vous trouvé.</p>
-                            <a href="{{ path('medecin_dashboard') }}" class="btn btn-primary">Voir tous les rendez-vous</a>
-                        </div>
-                    {% else %}
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Patient</th>
-                                        <th>Contact</th>
-                                        <th>Date/Heure</th>
-                                        <th>Statut</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for rdv in rendezvous %}
-                                        <tr class="rdv-card {{ rdv.statut }}">
-                                            <td><strong>#{{ rdv.id }}</strong></td>
-                                            <td>
-                                                <strong>{{ rdv.nom }}</strong><br>
-                                                <small class="text-muted">{{ rdv.specialite }}</small>
-                                            </td>
-                                            <td>
-                                                <small>
-                                                    📧 {{ rdv.email }}<br>
-                                                    📞 {{ rdv.telephone }}
-                                                </small>
-                                            </td>
-                                            <td>
-                                                <strong>{{ rdv.dateRdv|date('d/m/Y') }}</strong><br>
-                                                <small class="text-muted">🕐 {{ rdv.heureRdv|date('H:i') }}</small>
-                                            </td>
-                                            <td>
-                                                {% if rdv.statut == 'en_attente' %}
-                                                    <span class="badge bg-warning text-dark">⏳ En attente</span>
-                                                {% elseif rdv.statut == 'valide' %}
-                                                    <span class="badge bg-success">✅ Validé</span>
-                                                {% elseif rdv.statut == 'refuse' %}
-                                                    <span class="badge bg-danger">❌ Refusé</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                <div class="btn-group btn-group-sm" role="group">
-                                                    <a href="{{ path('medecin_rdv_details', {id: rdv.id}) }}" class="btn btn-outline-primary" title="Voir détails">
-                                                        👁️
-                                                    </a>
-                                                    {% if rdv.statut == 'en_attente' %}
-                                                        <form method="post" action="{{ path('medecin_rdv_accepter', {id: rdv.id}) }}" style="display:inline;">
-                                                            <button type="submit" class="btn btn-success" onclick="return confirm('Accepter ce rendez-vous et créer un compte patient ?')" title="Accepter">
-                                                                ✅
-                                                            </button>
-                                                        </form>
-                                                        <form method="post" action="{{ path('medecin_rdv_refuser', {id: rdv.id}) }}" style="display:inline;">
-                                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Refuser ce rendez-vous ?')" title="Refuser">
-                                                                ❌
-                                                            </button>
-                                                        </form>
-                                                    {% endif %}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% endif %}
+                <div class="col-md-4">
+                    <label class="form-label">Recherche</label>
+                    <input type="text" name="search" class="form-control" placeholder="Nom, email, téléphone..." value="{{ search }}">
                 </div>
-            </div>
+                <div class="col-md-3">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="date" class="form-control" value="{{ date_filter }}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Rechercher
+                    </button>
+                </div>
+                <div class="col-md-12">
+                    <a href="{{ path('medecin_dashboard') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser
+                    </a>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <!-- Sidebar : Rendez-vous à venir -->
-        <div class="col-lg-4">
-            <div class="upcoming-rdv mb-4">
-                <h5 class="mb-3 text-white">📆 Prochains Rendez-vous</h5>
-                {% if rdv_avenir is empty %}
-                    <p class="text-white-50 mb-0">Aucun rendez-vous à venir</p>
-                {% else %}
+    <!-- Liste des rendez-vous -->
+    <div class="table-container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Rendez-vous ({{ rendezvous|length }})</h5>
+        </div>
+        
+        {% if rendezvous is empty %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox fs-1 text-muted"></i>
+                <p class="text-muted mt-3">Aucun rendez-vous trouvé.</p>
+            </div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Patient</th>
+                            <th>Contact</th>
+                            <th>Date/Heure</th>
+                            <th>Statut</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rdv in rendezvous %}
+                            <tr>
+                                <td><strong>#{{ rdv.id }}</strong></td>
+                                <td>
+                                    <strong>{{ rdv.nom }}</strong><br>
+                                    <small class="text-muted">{{ rdv.specialite }}</small>
+                                </td>
+                                <td>
+                                    <small>
+                                        <i class="bi bi-envelope"></i> {{ rdv.email }}<br>
+                                        <i class="bi bi-telephone"></i> {{ rdv.telephone }}
+                                    </small>
+                                </td>
+                                <td>
+                                    <strong>{{ rdv.dateRdv|date('d/m/Y') }}</strong><br>
+                                    <small class="text-muted">{{ rdv.heureRdv|date('H:i') }}</small>
+                                </td>
+                                <td>
+                                    {% if rdv.statut == 'en_attente' %}
+                                        <span class="badge bg-warning text-dark">En attente</span>
+                                    {% elseif rdv.statut == 'valide' %}
+                                        <span class="badge bg-success">Validé</span>
+                                    {% elseif rdv.statut == 'refuse' %}
+                                        <span class="badge bg-danger">Refusé</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ path('medecin_rdv_details', {id: rdv.id}) }}" class="btn btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        {% if rdv.statut == 'en_attente' %}
+                                            <form method="post" action="{{ path('medecin_rdv_accepter', {id: rdv.id}) }}" style="display:inline;">
+                                                <button type="submit" class="btn btn-success" onclick="return confirm('Accepter ce rendez-vous ?')" title="Accepter">
+                                                    <i class="bi bi-check"></i>
+                                                </button>
+                                            </form>
+                                            <form method="post" action="{{ path('medecin_rdv_refuser', {id: rdv.id}) }}" style="display:inline;">
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Refuser ce rendez-vous ?')" title="Refuser">
+                                                    <i class="bi bi-x"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Prochains rendez-vous -->
+    {% if rdv_avenir is not empty %}
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="bi bi-calendar3"></i> Prochains Rendez-vous</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
                     {% for rdv in rdv_avenir %}
-                        <div class="upcoming-rdv-item">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <strong class="text-white">{{ rdv.nom }}</strong>
-                                <span class="badge bg-light text-dark">{{ rdv.specialite }}</span>
+                        <div class="col-md-6 mb-3">
+                            <div class="border rounded p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <strong>{{ rdv.nom }}</strong>
+                                        <span class="badge bg-info ms-2">{{ rdv.specialite }}</span>
+                                    </div>
+                                    <a href="{{ path('medecin_rdv_details', {id: rdv.id}) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </div>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar"></i> {{ rdv.dateRdv|date('d/m/Y') }} à {{ rdv.heureRdv|date('H:i') }}<br>
+                                    <i class="bi bi-envelope"></i> {{ rdv.email }}
+                                </small>
                             </div>
-                            <div class="text-white-50 small">
-                                📅 {{ rdv.dateRdv|date('d/m/Y') }} à {{ rdv.heureRdv|date('H:i') }}<br>
-                                📧 {{ rdv.email }}
-                            </div>
-                            <a href="{{ path('medecin_rdv_details', {id: rdv.id}) }}" class="btn btn-sm btn-light mt-2">
-                                Voir détails →
-                            </a>
                         </div>
                     {% endfor %}
-                {% endif %}
-            </div>
-
-            <!-- Actions rapides -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-info text-white">
-                    <h6 class="mb-0">⚡ Actions Rapides</h6>
-                </div>
-                <div class="card-body">
-                    <a href="{{ path('medecin_dashboard', {statut: 'en_attente'}) }}" class="btn btn-warning w-100 mb-2">
-                        ⏳ Voir les demandes en attente ({{ stats.en_attente }})
-                    </a>
-                    <a href="{{ path('medecin_dashboard', {statut: 'valide'}) }}" class="btn btn-success w-100 mb-2">
-                        ✅ Voir les rendez-vous validés
-                    </a>
-             
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    {% endif %}
 {% endblock %}

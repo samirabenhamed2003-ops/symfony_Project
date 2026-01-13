@@ -1,0 +1,31 @@
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <span class="logo">🩺</span>
+        <span class="title">MedDashboard</span>
+    </div>
+
+    <nav class="sidebar-menu">
+        <a href="{{ path('medecin_dashboard') }}"
+           class="{{ app.request.attributes.get('_route') == 'medecin_dashboard' ? 'active' : '' }}">
+            📊 Dashboard
+        </a>
+
+        <a href="{{ path('medecin_dashboard', { statut: 'en_attente' }) }}">
+            ⏳ En attente
+        </a>
+
+        <a href="{{ path('medecin_dashboard', { statut: 'valide' }) }}">
+            ✅ Validés
+        </a>
+
+        <a href="{{ path('medecin_dashboard', { statut: 'refuse' }) }}">
+            ❌ Refusés
+        </a>
+
+        <hr class="divider">
+
+        <a href="{{ path('app_logout') }}" class="logout">
+            🚪 Déconnexion
+        </a>
+    </nav>
+</aside>

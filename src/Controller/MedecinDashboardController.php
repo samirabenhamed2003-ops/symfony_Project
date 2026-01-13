@@ -233,4 +233,33 @@ class MedecinDashboardController extends AbstractController
 
         return $this->redirectToRoute('medecin_dashboard');
     }
+
+    #[Route('/patients', name: 'medecin_patients')]
+    public function listePatients(ReserverRendezVousRepository $rdvRepo): Response
+    {
+        $medecin = $this->getUser();
+        
+        // Récupérer tous les patients uniques du médecin (via les rendez-vous)
+        $patientsData = $rdvRepo->createQueryBuilder('r')
+            ->select('r.patient as patientId')
+            ->addSelect('r.email as email')
+            ->addSelect('r.nom as nom')
+            ->addSelect('r.telephone as telephone')
+            ->addSelect('COUNT(r.id) as nbRendezVous')
+            ->addSelect('MAX(r.date_rdv) as dernierRdv')
+            ->where('r.medecin = :medecin')
+            ->andWhere('r.patient IS NOT NULL')
+            ->setParameter('medecin', $medecin)
+            ->groupBy('r.patient')
+            ->addGroupBy('r.email')
+            ->addGroupBy('r.nom')
+            ->addGroupBy('r.telephone')
+            ->orderBy('nbRendezVous', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('medecin/patients.html.twig', [
+            'patients' => $patientsData,
+        ]);
+    }
 }

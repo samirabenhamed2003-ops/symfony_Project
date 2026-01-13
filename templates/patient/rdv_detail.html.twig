@@ -1,19 +1,30 @@
-{% extends 'base.html.twig' %}
+{% extends 'dashboard_base.html.twig' %}
 
 {% block title %}Détails du Rendez-vous{% endblock %}
 
+{% block page_title %}Détails du Rendez-vous{% endblock %}
+
+{% block sidebar_menu %}
+    <a href="{{ path('patient_dashboard') }}" class="menu-item">
+        <i class="bi bi-calendar-check"></i>
+        <span>Mes Rendez-vous</span>
+    </a>
+    <a href="{{ path('app_home') }}" class="menu-item">
+        <i class="bi bi-house"></i>
+        <span>Accueil</span>
+    </a>
+{% endblock %}
+
 {% block body %}
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>📋 Détails du Rendez-vous</h1>
-        <div>
-            <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">Déconnexion</a>
-        </div>
+    <div class="mb-3">
+        <a href="{{ path('patient_dashboard') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
     </div>
 
     {% if rdv %}
         <div class="row">
-            <div class="col-md-8 mx-auto">
+            <div class="col-md-10 mx-auto">
                 <div class="card shadow-sm">
                     <div class="card-header {% if rdv.statut == 'valide' %}bg-success text-white{% elseif rdv.statut == 'refuse' %}bg-danger text-white{% else %}bg-warning text-dark{% endif %}">
                         <h4 class="mb-0">
@@ -140,9 +151,10 @@
 
 
 
-                    <div class="card-footer text-center">
-                        <a href="{{ path('patient_dashboard') }}" class="btn btn-primary">Retour à mes rendez-vous</a>
-
+                    <div class="card-footer bg-white text-center">
+                        <a href="{{ path('patient_dashboard') }}" class="btn btn-primary">
+                            <i class="bi bi-arrow-left"></i> Retour à mes rendez-vous
+                        </a>
                     </div>
                 </div>
             </div>
